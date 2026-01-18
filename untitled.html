@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spin & Win Guaranteed Prizes!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-glow: #ffd700;
+            --secondary-glow: #ff00ea;
+            --bg-gradient: linear-gradient(135deg, #1a0033 0%, #4a0072 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            animation: fadeInDown 1s ease;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--primary-glow);
+            color: var(--primary-glow);
+            margin-bottom: 10px;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin: 20px auto;
+            border-radius: 50%;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 30px rgba(0,0,0,0.5), 0 0 20px var(--secondary-glow);
+        }
+
+        .pointer {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            z-index: 10;
+        }
+        .pointer::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-top: 40px solid #ff0000;
+        }
+
+        #wheelImage {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            transition: transform 5s cubic-bezier(0.15, 0, 0.15, 1);
+        }
+
+        .spin-btn {
+            margin-top: 30px;
+            padding: 15px 50px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #000;
+            background: var(--primary-glow);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px var(--primary-glow);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+            margin-top: 20px;
+            box-shadow: 0 0 10px #25d366;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #333;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+
+        #progressBar {
+            width: 0%;
+            height: 100%;
+            background: var(--primary-glow);
+            transition: width 0.5s;
+        }
+
+        input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; }
+        .submit-btn { width: 100%; padding: 15px; background: var(--secondary-glow); color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
+
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+    </style>
+</head>
+<script src="https://pl27061682.effectivegatecpm.com/4f/99/95/4f99959d4a8537ca27c85b501c1c3b64.js"></script>
+<body>
+
+    <div class="header">
+        <h1>Spin & Win!</h1>
+        <p>Guaranteed Prize for Everyone</p>
+    </div>
+
+    <div class="wheel-container">
+        <div class="pointer"></div>
+        <img src="spin.png" id="wheelImage" alt="Wheel">
+    </div>
+
+    <button class="spin-btn" id="spinBtn" onclick="startSpin()">Spin Now</button>
+
+    <div class="overlay" id="winOverlay">
+        <div class="card">
+            <h2 style="color: var(--primary-glow)">Congratulations!</h2>
+            <p style="font-size: 1.5rem; font-weight: 800; margin: 10px 0;" id="winningPrize"></p>
+            <p>To claim your prize, share this with 10 WhatsApp friends!</p>
+            
+            <div class="progress-container"><div id="progressBar"></div></div>
+            <p id="shareCountText">Shared: 0/10</p>
+
+            <a href="javascript:void(0)" class="whatsapp-btn" onclick="handleShare()">Share on WhatsApp</a>
+        </div>
+    </div>
+
+    <div class="overlay" id="formOverlay">
+        <div class="card">
+            <h2>Claim Form</h2>
+            <form onsubmit="submitForm(event)">
+                <input type="text" placeholder="Your Name" required>
+                <input type="tel" placeholder="Mobile Number" required>
+                <button type="submit" class="submit-btn">Submit Now</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="overlay" id="successOverlay">
+        <div class="card">
+            <h2 style="color: var(--primary-glow)">Success!</h2>
+            <p>Your claim has been submitted. We will contact you soon!</p>
+        </div>
+    </div>
+
+    <script>
+        const prizes = ["₹100 PayTM Cash", "Surprise Gift Box", "20% Discount", "Free Coffee", "Amazon Voucher ₹50", "AirPods", "Bluetooth Speaker", "Smartwatch", "Samsung TV", "iPhone 14", "Movie Ticket"];
+        let currentRotation = 0;
+        let shareCount = 0;
+
+        function startSpin() {
+            document.getElementById('spinBtn').disabled = true;
+            const extraSpins = (Math.floor(Math.random() * 5) + 5) * 360;
+            const prizeIndex = Math.floor(Math.random() * prizes.length);
+            const segmentAngle = 360 / 12;
+            
+            currentRotation += extraSpins + (360 - (currentRotation % 360)) + (prizeIndex * segmentAngle);
+            document.getElementById('wheelImage').style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => {
+                confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+                document.getElementById('winningPrize').innerText = "You Won: " + prizes[prizeIndex];
+                document.getElementById('winOverlay').style.display = 'flex';
+            }, 5500);
+        }
+
+        function handleShare() {
+            const shareText = encodeURIComponent("I just won a real prize on this Spin & Win page! Try your luck too! " + window.location.href);
+            const whatsappUrl = "https://api.whatsapp.com/send?text=" + shareText;
+            
+            // Open WhatsApp
+            window.open(whatsappUrl, '_blank');
+
+            // Simulate progress update
+            shareCount += 2; 
+            if (shareCount > 10) shareCount = 10;
+            
+            document.getElementById('progressBar').style.width = (shareCount * 10) + '%';
+            document.getElementById('shareCountText').innerText = `Shared: ${shareCount}/10`;
+
+            if (shareCount >= 10) {
+                setTimeout(() => {
+                    document.getElementById('winOverlay').style.display = 'none';
+                    document.getElementById('formOverlay').style.display = 'flex';
+                }, 1000);
+            }
+        }
+
+        function submitForm(e) {
+            e.preventDefault();
+            document.getElementById('formOverlay').style.display = 'none';
+            document.getElementById('successOverlay').style.display = 'flex';
+            confetti({ particleCount: 150, spread: 100 });
+        }
+    </script>
+</body>
+</html>
+<script>
+  atOptions = {
+    'key' : '5abc87cc4338b5cdb4b608529d9d54b2',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/5abc87cc4338b5cdb4b608529d9d54b2/invoke.js"></script>
+<script>
+  atOptions = {
+    'key' : '5abc87cc4338b5cdb4b608529d9d54b2',
+    'format' : 'iframe',
+    'height' : 60,
+    'width' : 468,
+    'params' : {}
+  };
+</script>
+<script src="https://www.highperformanceformat.com/5abc87cc4338b5cdb4b608529d9d54b2/invoke.js"></script>
